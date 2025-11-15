@@ -82,6 +82,20 @@ class Partner (models.Model):
     address = models.ForeignKey(Address, on_delete=models.CASCADE)
     inn = models.CharField(max_length=12)
     rate = models.IntegerField()
+    #postavki = models.ForeignKey(on_delete=models.CASCADE, related_name='partner')
+
+
+    def discount(self):
+        total_quantity = self.postavki_set.aggregate(total=models.Sum("kolvo"))["total"] or 0
+
+        if total_quantity < 10000:
+            return 0
+        elif total_quantity < 50000:
+            return 5
+        elif total_quantity < 300000:
+            return 10
+        else:
+            return 15
 
     def __str__(self):
         return self.name

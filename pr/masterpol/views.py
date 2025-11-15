@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Partner, TypeProduct, TypeMaterial
+from .models import Partner, TypeProduct, TypeMaterial, Postavki
 from .forms import PartnerForm
 import math
 
 
 def partner_list(request):
     partners = Partner.objects.all()
+    #postavki = Postavki.objects.all()
     return render(request, 'partner_list.html', {'partners': partners})
 
 
@@ -34,13 +35,12 @@ def partner_edit(request, pk):
 
 def partner_history(request, pk):
     partner = get_object_or_404(Partner, pk=pk)
-    postavki = partner.postavki.all()
-    discount = partner.calculate_discount()
+    postavki = Postavki.objects.filter(partner=partner)
+    #discount = partner.discount(postavki)
 
     return render(request, "partner_history.html", {
         "partner": partner,
-        "postavki": postavki,
-        "discount": discount
+        "postavki": postavki
     })
 
 

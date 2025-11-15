@@ -86,6 +86,7 @@
                     <th>Наименование</th>
                     <th>Тип</th>
                     <th>Рейтинг</th>
+                    <th>Индивидуальная скидка</th>
                     <th>Действия</th>
                 </tr>
             </thead>
@@ -95,6 +96,7 @@
                     <td>{{ partner.name }}</td>
                     <td>{{ partner.type }}</td>
                     <td>{{ partner.rate }}</td>
+                    <td>{{ partner.discount }}%</td>
                     <td>
                         <a href="{% url 'partner_history' partner.pk %}" class="uk-button uk-button-default">История продаж</a>
                         <a href="{% url 'partner_edit' partner.pk %}" class="uk-button uk-button-default">Редактировать</a>
