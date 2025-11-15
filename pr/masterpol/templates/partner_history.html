@@ -1,0 +1,173 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>История реализации продукции</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.15.7/dist/css/uikit.min.css" />
+    <style>
+        .logo {
+        height: 52px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .uk-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h1.uk-heading-divider {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #67BA80;
+            margin-bottom: 30px;
+        }
+
+        .uk-table {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .uk-table thead th {
+            background-color: #F4E8D3;
+            color: #333;
+            font-weight: 600;
+            padding: 15px 12px;
+            border-bottom: 2px solid #67BA80;
+        }
+
+        .uk-table tbody td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .uk-table tbody tr:nth-child(even) {
+            background-color: #F9F5EF;
+        }
+
+        .uk-table tbody tr:hover {
+            background-color: #F4E8D3;
+            transition: background-color 0.2s ease;
+        }
+
+        .uk-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        a.uk-button-default {
+            background-color: white;
+            border: 1px solid #67BA80;
+            color: #67BA80;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        a.uk-button-default:hover {
+            background-color: #67BA80;
+            color: white;
+            text-decoration: none;
+            transform: translateY(-1px);
+        }
+
+        .uk-margin-top {
+            margin-top: 25px;
+        }
+
+        .uk-table tbody tr td[colspan] {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 30px;
+            background-color: #F9F5EF;
+        }
+
+        .uk-table.uk-table-divider {
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <img src="{% static 'logo.png' %}" alt="Логотип" class="logo">
+    <div class="uk-container">
+        <h1 class="uk-heading-divider">История реализации продукции партнера: {{ partner.name }}</h1>
+         <h3 class="uk-heading-bullet">Расчёт материала</h3>
+
+        <form method="post" class="uk-form-stacked uk-width-1-2 uk-margin-bottom">
+    {% csrf_token %}
+
+    {% for field in form %}
+    <div class="uk-margin">
+        <label class="uk-form-label">{{ field.label }}</label>
+        <div class="uk-form-controls">
+            {{ field }}
+            {% if field.errors %}
+                <div class="uk-text-danger">{{ field.errors }}</div>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+
+    <button class="uk-button uk-button-primary" type="submit">
+        Рассчитать
+    </button>
+</form>
+
+{% if result != None %}
+<div class="uk-alert-primary" uk-alert>
+    <p class="uk-text-large">
+        Необходимое количество материала: <strong>{{ result }}</strong>
+    </p>
+</div>
+{% endif %}
+
+        <table class="uk-table uk-table-divider uk-margin-top">
+            <thead>
+                <tr>
+                    <th>Продукция</th>
+                    <th>Количество</th>
+                    <th>Дата продажи</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for postavka in postavki %}
+                    <tr>
+                        <td>{{ postavka.product.name }}</td>
+                        <td>{{ postavka.kolvo }}</td>
+                        <td>{{ postavka.date }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="3">История реализации пуста.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{% url 'partner_list' %}" class="uk-button uk-button-default uk-margin-top">Назад к списку партнеров</a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.15.7/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.15.7/dist/js/uikit-icons.min.js"></script>
+</body>
+</html>
